@@ -8,12 +8,13 @@ def TrainModel(
         epochs: int = 50,
         imgsz: int = 640,
         batch: int = 16,
-        training_device: str = "0"
-    ):
+        training_device: str = "cpu"
+    ) -> ultralytics.YOLO:
+    print(f"BASE MODEL: {base_model}")
     model = ultralytics.YOLO(base_model)
 
-    data_yaml_path = os.path.join(dataset_dir, "data.yaml")
-
+    data_yaml_path = os.path.join(os.getcwd(), dataset_dir, "data.yaml")
+    print(f"TRAINING OFF DATA AT: {data_yaml_path}")
     results = model.train(
         data=data_yaml_path,
         epochs=epochs,
@@ -22,7 +23,7 @@ def TrainModel(
         device=training_device,
     )
 
-    print("Training complete!")
+    print("TRAINING COMPLETE!")
 
     # ==========================================
     # 3. USE THE MODEL FOR INFERENCE
@@ -55,3 +56,9 @@ def TestModel(
             f"Test image not found at {test_image_path}. Skipping inference test script."
         )
         return -1
+
+def main():
+    trained_model = TrainModel()
+
+if __name__ == "__main__":
+    main()
